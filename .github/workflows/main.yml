@@ -28,9 +28,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Generate Deployment Package
-      run: |
-        cd CryptoApi
-        zip -r ../deploy.zip .
+      run: zip -r deploy.zip . -x "*.git*" "*/bin/*" "*/obj/*" ".github/*"
 
     - name: Deploy to AWS
       uses: einaregilsson/beanstalk-deploy@v22
