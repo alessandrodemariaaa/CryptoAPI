@@ -9,16 +9,8 @@ public class CryptoController : ControllerBase
     private readonly CryptoService _cryptoService = new();
 
     [HttpGet("encrypt/{text}")]
-    public IActionResult Encrypt(string text) 
-    {
-        var result = _cryptoService.Encrypt(text);
-        return Ok(result);
-    }
+    public IActionResult Encrypt(string text) => Ok(_cryptoService.Encrypt(text));
 
     [HttpGet("decrypt/{text}")]
-    public IActionResult Decrypt(string text) 
-    {
-        var result = _cryptoService.Decrypt(text);
-        return Ok(result);
-    }
+    public IActionResult Decrypt(string text) => Ok(_cryptoService.Decrypt(text));
 }
