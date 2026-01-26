@@ -27,11 +27,13 @@ jobs:
     - name: Run Tests
       run: dotnet test --no-build --verbosity normal
 
+    # Skapar zip-filen stabilt utan manuella terminalkommandon
     - name: Generate Deployment Package
       uses: thedoctor0/zip-release@master
       with:
         type: 'zip'
         filename: 'deploy.zip'
+        # Exkluderar filer för att undvika EISDIR-fel
         exclusions: '*.git* /*node_modules/* .editorconfig'
 
     - name: Deploy to AWS
@@ -41,8 +43,8 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: 'CryptoApiApp'
         environment_name: 'CryptoApiApp-env'
+        # Unik label för att tvinga bort "Sample"-versionen
         version_label: "deploy-${{ github.sha }}-${{ github.run_number }}"
         region: eu-north-1
         deployment_package: deploy.zip
         wait_for_deployment: true
-        timeout_deployment: 600
