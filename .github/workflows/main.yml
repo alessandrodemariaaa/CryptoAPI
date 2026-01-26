@@ -28,7 +28,11 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Generate Deployment Package
-      run: zip -r deploy.zip . -x "*.git*" "*/bin/*" "*/obj/*" ".github/*"
+      uses: thedoctor0/zip-release@master
+      with:
+        type: 'zip'
+        filename: 'deploy.zip'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
 
     - name: Deploy to AWS
       uses: einaregilsson/beanstalk-deploy@v22
@@ -41,3 +45,4 @@ jobs:
         region: eu-north-1
         deployment_package: deploy.zip
         wait_for_deployment: true
+        timeout_deployment: 600
