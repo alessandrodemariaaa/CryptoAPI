@@ -25,9 +25,12 @@ jobs:
     - name: Run Tests
       run: dotnet test --no-build --verbosity normal
 
+    - name: Publish App
+      run: dotnet publish CryptoApi/CryptoApi.csproj -c Release -o out
+
     - name: Generate Deployment Package
       run: |
-        cd CryptoApi
+        cd out
         zip -r ../deploy.zip .
 
     - name: Deploy to AWS
