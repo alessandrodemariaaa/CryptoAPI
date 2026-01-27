@@ -25,16 +25,13 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Run Tests
-      # Detta steg är avgörande för VG - det kör dina enhetstester automatiskt
       run: dotnet test --no-build --verbosity normal
 
-    # Skapar zip-filen stabilt för att undvika EISDIR-fel
     - name: Generate Deployment Package
       uses: thedoctor0/zip-release@master
       with:
         type: 'zip'
         filename: 'deploy.zip'
-        # Exkluderar filer som inte behövs i produktion
         exclusions: '*.git* /*node_modules/* .editorconfig'
 
     - name: Deploy to AWS
@@ -44,7 +41,6 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: 'CryptoApiApp'
         environment_name: 'CryptoApiApp-env'
-        # Unik label med tidsstämpel/körnummer för att tvinga bort gamla versioner
         version_label: "deploy-${{ github.sha }}-${{ github.run_number }}"
         region: eu-north-1
         deployment_package: deploy.zip
