@@ -3,8 +3,6 @@ name: CI/CD-Pipeline
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build-and-test:
@@ -28,11 +26,9 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Generate Deployment Package
-      uses: thedoctor0/zip-release@master
-      with:
-        type: 'zip'
-        filename: 'deploy.zip'
-        exclusions: '*.git* /*node_modules/* .editorconfig'
+      run: |
+        cd CryptoApi
+        zip -r ../deploy.zip .
 
     - name: Deploy to AWS
       uses: einaregilsson/beanstalk-deploy@v22
@@ -41,7 +37,7 @@ jobs:
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         application_name: 'CryptoApiApp'
         environment_name: 'CryptoApiApp-env'
-        version_label: "deploy-${{ github.sha }}-${{ github.run_number }}"
+        version_label: "v-${{ github.run_id }}-${{ github.run_attempt }}"
         region: eu-north-1
         deployment_package: deploy.zip
         wait_for_deployment: true
