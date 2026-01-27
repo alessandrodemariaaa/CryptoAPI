@@ -26,9 +26,12 @@ jobs:
       run: dotnet test --no-build --verbosity normal
 
     - name: Generate Deployment Package
-      run: |
-        cd CryptoApi
-        zip -r ../deploy.zip .
+      uses: thedoctor0/zip-release@master
+      with:
+        type: 'zip'
+        filename: 'deploy.zip'
+        directory: 'CryptoApi'
+        exclusions: '*.git* /*node_modules/* .editorconfig'
 
     - name: Deploy to AWS
       uses: einaregilsson/beanstalk-deploy@v22
@@ -39,5 +42,5 @@ jobs:
         environment_name: 'CryptoApiApp-env'
         version_label: "v-${{ github.run_id }}-${{ github.run_attempt }}"
         region: eu-north-1
-        deployment_package: deploy.zip
+        deployment_package: CryptoApi/deploy.zip # Zip-filen hamnar inuti mappen
         wait_for_deployment: true
