@@ -2,11 +2,12 @@ name: CI/CD-Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -14,28 +15,26 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '8.0.x'
 
     - name: Restore
       run: dotnet restore
 
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -c Release
 
     - name: Run Tests
-    
       run: dotnet test --no-build --verbosity normal
 
-
     - name: Publish App
-      run: dotnet publish CryptoApi.csproj -c Release -o out
+      run: dotnet publish CryptoApi.csproj -c Release -r linux-x64 --self-contained true -p:PublishSingleFile=true -o out
 
     - name: Generate Deployment Package
       run: |
         cd out
         zip -r ../deploy.zip .
 
-    - name: Deploy to AWS
+    - name: Deploy to AWS Elastic Beanstalk
       uses: einaregilsson/beanstalk-deploy@v22
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
