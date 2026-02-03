@@ -15,7 +15,7 @@ Projektets pipeline är definierad i .github/workflows/main.yml och består av f
 
 Build & Restore: Projektet återställer paket och kompileras för att säkerställa att ingen trasig kod checkas in.
 
-Automated Testing (VG-krav): Alla enhetstester körs automatiskt. Om ett test misslyckas avbryts pipelinen och ingen deployment sker.
+Automated Testing: Alla enhetstester körs automatiskt. Om ett test misslyckas avbryts pipelinen och ingen deployment sker.
 
 Publish: Applikationen publiceras med dotnet publish för att generera optimerade binärer och nödvändiga konfigurationsfiler.
 
